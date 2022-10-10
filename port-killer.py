@@ -28,6 +28,7 @@ def searchAndDestroy(port):
     if not checkEstablished(i) or current_port != port:
       continue
     
+    print(i)
     # TODO execute termination command:
     # taskkill /PID 39304 /F
 
