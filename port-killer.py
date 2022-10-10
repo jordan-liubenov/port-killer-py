@@ -19,6 +19,17 @@ def checkEstablished(port):
 def searchAndDestroy(port):
   output = os.popen('netstat -ano | findstr :' + port).read()
   output = formatPortResults(output)
+ 
+  if not output:
+    decision = input("Port is not active, (retry) or (exit)?\n")
+    decision = decision.strip().lower()
+    if decision == 'exit':
+     os.system('exit')
+     return
+    elif decision == 'retry':
+     receiveInput()
+    else:
+      searchAndDestroy(port)
 
   for i in output:
     host = i[1].split(':')
@@ -30,22 +41,29 @@ def searchAndDestroy(port):
     
     result = os.popen('taskkill /PID ' + pid + ' /F').read()
     print(result)
-    break
-
+    return
+  
 def receiveInput():
   target_port = input('Enter desired port to kill:\n')  
   target_port = target_port.strip()
 
-  if int(target_port) <= 1023:
+  if not target_port.isnumeric():
+    print('That doesn\'t seem right... try again')
+    receiveInput()
+    return
+
   # check to make sure the port that was input is not a reserved port
+  if int(target_port) <= 1023:
     decision = input('Sorry, that port is reserved, (retry) or (exit)?\n')
     decision = decision.strip().lower()
     if decision == 'exit':
      os.system('exit')
+     return
     elif decision == 'retry':
      receiveInput()
 
   searchAndDestroy(target_port)
+
 
 def main():
   receiveInput()
