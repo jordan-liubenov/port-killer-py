@@ -28,12 +28,9 @@ def searchAndDestroy(port):
     if not checkEstablished(i) or current_port != port:
       continue
     
-    print(i)
-    # TODO execute termination command:
-    # taskkill /PID 39304 /F
-
-
-
+    result = os.popen('taskkill /PID ' + pid + ' /F').read()
+    print(result)
+    break
 
 def receiveInput():
   target_port = input('Enter desired port to kill:\n')  
@@ -42,7 +39,7 @@ def receiveInput():
   if int(target_port) <= 1023:
   # check to make sure the port that was input is not a reserved port
     decision = input('Sorry, that port is reserved, (retry) or (exit)?\n')
-    decision = decision.strip()
+    decision = decision.strip().lower()
     if decision == 'exit':
      os.system('exit')
     elif decision == 'retry':
